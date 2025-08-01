@@ -11,7 +11,7 @@ require('lazy').setup({
   require 'plugins.mini',
   require 'plugins.treesitter',
   require 'plugins.debug',
-  require 'plugins.indent_line',
+  require 'plugins.indent-blankline',
   require 'plugins.lint',
   require 'plugins.autopairs',
   require 'plugins.markview',
