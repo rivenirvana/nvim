@@ -1,14 +1,9 @@
 ---@module 'lazy'
 ---@type LazySpec
 return {
-  -- NOTE: Yes, you can install new plugins here!
   'mfussenegger/nvim-dap',
-  -- NOTE: And you can specify dependencies as well
   dependencies = {
-    -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
-
-    -- Required dependency for nvim-dap-ui
     'nvim-neotest/nvim-nio',
 
     -- Installs the debug adapters for you
@@ -19,7 +14,6 @@ return {
     'leoluz/nvim-dap-go',
   },
   keys = {
-    -- Basic debugging keymaps, feel free to change to your liking!
     { '<F5>', function() require('dap').continue() end, desc = 'Debug: Start/Continue' },
     { '<F1>', function() require('dap').step_into() end, desc = 'Debug: Step Into' },
     { '<F2>', function() require('dap').step_over() end, desc = 'Debug: Step Over' },
@@ -40,6 +34,7 @@ return {
               return candidate
             end
           end
+
           return { condition = '', logMessage = '', hitCondition = '', line = vim.fn.line '.' }
         end
 
