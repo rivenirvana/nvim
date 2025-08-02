@@ -9,6 +9,7 @@ return {
   config = function()
     local fzflua = require 'fzf-lua'
     fzflua.setup()
+    fzflua.register_ui_select()
 
     vim.keymap.set('n', '<leader>sh', fzflua.helptags, { desc = '[S]earch [H]elp' })
     vim.keymap.set('n', '<leader>sk', fzflua.keymaps, { desc = '[S]earch [K]eymaps' })
