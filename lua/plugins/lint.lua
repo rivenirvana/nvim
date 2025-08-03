@@ -14,7 +14,7 @@ return {
     -- lint.linters_by_ft = lint.linters_by_ft or {}
     -- lint.linters_by_ft['markdown'] = { 'markdownlint' }
     --
-    -- However, note that this will enable a set of default linters,
+    -- However, this will enable a set of default linters,
     -- which will cause errors unless these tools are available:
     -- {
     --   clojure = { "clj-kondo" },
@@ -29,7 +29,7 @@ return {
     --   text = { "vale" }
     -- }
     --
-    -- You can disable the default linters by setting their filetypes to nil:
+    -- Disable the default linters by setting their filetypes to nil:
     -- lint.linters_by_ft['clojure'] = nil
     -- lint.linters_by_ft['dockerfile'] = nil
     -- lint.linters_by_ft['inko'] = nil

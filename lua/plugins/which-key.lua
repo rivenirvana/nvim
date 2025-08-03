@@ -6,11 +6,9 @@ return {
   ---@module 'which-key'
   ---@type wk.Opts
   opts = {
-    -- delay between pressing a key and opening which-key (milliseconds)
-    -- this setting is independent of vim.o.timeoutlen
+    -- This is independent of vim.o.timeoutlen
     delay = 200,
     icons = {
-      -- set icon mappings to true if you have a Nerd Font
       mappings = vim.g.has_nerd_font,
       keys = vim.g.has_nerd_font and {} or {
         Up = '<Up> ',
