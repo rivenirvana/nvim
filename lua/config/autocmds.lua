@@ -59,8 +59,8 @@ vim.api.nvim_create_autocmd({ 'FileType' }, {
   pattern = { '*_backdrop' },
   callback = function(args)
     local id = vim.fn.win_findbuf(args.buf)[1]
-    -- local ratio = vim.wo[id].winblend
-    local ratio = vim.api.nvim_get_option_value('winblend', { win = id })
+    local ratio = vim.wo[id].winblend
+    -- local ratio = vim.api.nvim_get_option_value('winblend', { win = id })
     local params = {}
     local hl = vim.api.nvim_get_hl(0, { name = 'Normal' })
     if hl and hl.bg then
