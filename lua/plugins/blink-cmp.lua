@@ -9,9 +9,9 @@ return {
       'L3MON4D3/LuaSnip',
       version = '2.*',
       build = (function()
-        -- Needed for regex support in snippets.
-        -- Not supported in many Windows environments.
-        -- Remove the below condition to re-enable on Windows.
+        -- Needed for regex support in snippets
+        -- Not supported in many Windows environments
+        -- Remove condition below to re-enable on Windows
         if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
           return
         end
