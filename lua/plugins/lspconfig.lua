@@ -95,6 +95,7 @@ return {
         },
         -- virtual_lines = true,
       }
+
       ---@class LspServersConfig
       ---@field mason table<string, vim.lsp.Config>
       ---@field others table<string, vim.lsp.Config>
@@ -102,8 +103,8 @@ return {
         mason = {
           clangd = {},
           gopls = {},
-          -- pyright = {},
-          ruff = {},
+          basedpyright = {},
+          -- ruff = {},
           rust_analyzer = {},
           -- https://github.com/pmizio/typescript-tools.nvim
           ts_ls = {},
