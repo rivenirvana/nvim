@@ -29,7 +29,7 @@ require('lazy').setup({
   require 'plugins.mini',
   require 'plugins.debug',
   require 'plugins.indent-blankline',
-  require 'plugins.lint',
+  require 'plugins.nvim-lint',
   require 'plugins.autopairs',
   require 'plugins.markview',
   require 'plugins.oil',
