@@ -20,7 +20,7 @@ require('lazy').setup({
   require 'plugins.guess-indent',
   require 'plugins.gitsigns',
   require 'plugins.which-key',
-  require 'plugins.lspconfig',
+  require 'plugins.lsp',
   require 'plugins.fzf-lua',
   require 'plugins.conform',
   require 'plugins.blink-cmp',
