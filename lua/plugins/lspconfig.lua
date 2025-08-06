@@ -19,11 +19,7 @@ return {
         'mason-org/mason.nvim',
         ---@module 'mason.settings'
         ---@type MasonSettings
-        opts = {
-          ui = {
-            border = 'rounded',
-          },
-        },
+        opts = {},
       },
       'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -84,7 +80,7 @@ return {
 
       vim.diagnostic.config {
         severity_sort = true,
-        float = { border = 'rounded', source = 'if_many' },
+        float = { source = 'if_many' },
         signs = vim.g.has_nerd_font and {
           text = {
             [vim.diagnostic.severity.ERROR] = '󰅚 ',

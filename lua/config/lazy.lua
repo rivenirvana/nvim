@@ -39,7 +39,6 @@ require('lazy').setup({
   require 'plugins.vim-suda',
 }, {
   ui = {
-    border = 'rounded',
     icons = vim.g.has_nerd_font and {} or {
       cmd = '⌘',
       config = '🛠',

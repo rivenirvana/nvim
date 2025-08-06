@@ -37,6 +37,7 @@ vim.o.shiftwidth = 4
 vim.o.expandtab = true
 vim.o.smartindent = true
 vim.o.breakindent = true
+vim.o.winborder = 'rounded'
 
 vim.opt.isfname:append { '@-@' }
 
