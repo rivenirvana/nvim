@@ -133,9 +133,7 @@ return {
             filetypes = { 'bash', 'sh', 'zsh' },
           },
         },
-        others = {
-          -- dartls = {},
-        },
+        others = {},
       }
 
       local ensure_installed = vim.tbl_keys(servers.mason)

@@ -3,13 +3,14 @@ vim.g.maplocalleader = '\\'
 
 vim.g.has_nerd_font = true
 
+-- General
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.cursorline = true
 vim.o.wrap = false
 vim.o.scrolloff = 10
 vim.o.sidescrolloff = 10
-
+vim.o.winborder = 'rounded'
 vim.o.signcolumn = 'yes'
 vim.o.updatetime = 50
 vim.o.timeoutlen = 200
@@ -20,24 +21,22 @@ vim.o.listchars = 'tab:» ,trail:·,nbsp:␣'
 vim.o.inccommand = 'split'
 vim.o.smoothscroll = true
 vim.o.confirm = true
-
 vim.o.mouse = 'a'
 vim.o.colorcolumn = '80'
 vim.o.showmode = false
 vim.o.undofile = true
 
--- Search
-vim.o.ignorecase = true
-vim.o.smartcase = true
-
--- Indentation
+-- Indent
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
 vim.o.smartindent = true
 vim.o.breakindent = true
-vim.o.winborder = 'rounded'
+
+-- Search
+vim.o.ignorecase = true
+vim.o.smartcase = true
 
 vim.opt.isfname:append { '@-@' }
 
