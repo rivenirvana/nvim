@@ -7,9 +7,26 @@ return {
   -- dependencies = { 'echasnovski/mini.icons' },
   config = function()
     local fzflua = require 'fzf-lua'
-    fzflua.setup()
-    fzflua.register_ui_select()
 
+    fzflua.setup {
+      keymap = {
+        fzf = {
+          true,
+          ['ctrl-q'] = 'select-all+accept',
+        },
+      },
+      fzf_opts = {
+        ['--cycle'] = '',
+      },
+      -- file_icon_padding = ' ',
+      -- winopts = {
+      --   preview = {
+      --     default = 'bat',
+      --   },
+      -- },
+    }
+
+    fzflua.register_ui_select()
 
     vim.keymap.set({ 'n', 'x' }, '<leader>sb', fzflua.builtin, { desc = 'Search: Builtin Search Commands' })
     vim.keymap.set('n', '<leader>sr', fzflua.resume, { desc = 'Search: Resume' })
