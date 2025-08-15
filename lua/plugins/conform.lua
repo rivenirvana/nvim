@@ -5,7 +5,7 @@ return {
   event = 'BufWritePre',
   cmd = 'ConformInfo',
   keys = {
-    { '<leader>f', function() require('conform').format { async = true, lsp_format = 'fallback' } end, mode = '', desc = '[F]ormat buffer' },
+    { '<leader>f', function() require('conform').format { async = true, lsp_format = 'fallback' } end, mode = '', desc = 'Format buffer' },
   },
   ---@module 'conform'
   ---@type conform.setupOpts

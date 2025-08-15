@@ -6,7 +6,6 @@ return {
   ---@module 'which-key'
   ---@type wk.Opts
   opts = {
-    -- This is independent of vim.o.timeoutlen
     delay = 200,
     icons = {
       mappings = vim.g.has_nerd_font,
@@ -42,12 +41,12 @@ return {
       },
     },
 
-    -- Document existing key chains
     spec = {
-      { '<leader>s', group = '[S]earch', mode = { 'n', 'v' } },
-      { '<leader>t', group = '[T]oggle' },
-      { '<leader>x', group = 'E[X]ec' },
-      { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+      { '<leader>s', group = 'Search', mode = { 'n', 'v' } },
+      { '<leader>t', group = 'Toggle' },
+      { '<leader>x', group = 'Exec' },
+      { '<leader>h', group = 'Git Hunk', mode = { 'n', 'v' } },
+      { 'gr', group = 'LSP', mode = { 'n' } },
     },
 
     -- Disable which-key popup when entering visual mode

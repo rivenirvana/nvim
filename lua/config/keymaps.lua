@@ -1,23 +1,23 @@
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open Diagnostic Quickfix List' })
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit Terminal Mode' })
 
-vim.keymap.set('n', '<leader>xn', vim.cmd.Ex, { desc = 'E[X]ec [N]etrw' })
-vim.keymap.set('n', '<leader>xs', vim.cmd.so, { desc = 'E[X]ec [S]ource script' })
-vim.keymap.set('n', '<leader>xc', '<cmd>!chmod +x %<CR>', { desc = 'E[X]ec [C]hmod +x', silent = true })
-vim.keymap.set('n', '<leader>xr', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'E[X]ec Search and [R]eplace' })
-vim.keymap.set('n', '<leader>xf', '<cmd>silent !tmux neww tmux-sessionizer<CR>', { desc = 'E[X]ec [F]ind Project' })
-vim.keymap.set('n', '<leader>F', vim.lsp.buf.format, { desc = '[F]ormat buffer via LSP' })
+vim.keymap.set('n', '<leader>xn', vim.cmd.Ex, { desc = 'Exec Netrw' })
+vim.keymap.set('n', '<leader>xs', vim.cmd.so, { desc = 'Exec Source Script' })
+vim.keymap.set('n', '<leader>xc', '<cmd>!chmod +x %<CR>', { desc = 'Exec chmod +x', silent = true })
+vim.keymap.set('n', '<leader>xr', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Exec Search & Replace' })
+-- vim.keymap.set('n', '<leader>xf', '<cmd>silent !tmux neww tmux-sessionizer<CR>', { desc = 'Exec Find Project' })
+-- vim.keymap.set('n', '<leader>F', vim.lsp.buf.format, { desc = 'Format Buffer via LSP' })
 
 -- Refrain from using <Esc> for CTRL-C, instead learn i_CTRL-C as a separate and intended feature. Keep keybind for now.
 -- vim.keymap.set('i', '<C-c>', '<Esc>')
 -- https://github.com/nvim-lua/kickstart.nvim/issues/1121
 -- vim.keymap.set('i', '<C-c>', '<C-c>')
 
--- vim.keymap.set('n', 'J', ':m .+1<CR>==', { desc = 'Move line down' })
--- vim.keymap.set('n', 'K', ':m .-2<CR>==', { desc = 'Move line up' })
-vim.keymap.set('x', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
-vim.keymap.set('x', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
+vim.keymap.set('n', '<M-j>', ':m .+1<CR>==', { desc = 'Move line down' })
+vim.keymap.set('n', '<M-k>', ':m .-2<CR>==', { desc = 'Move line up' })
+vim.keymap.set('x', '<M-j>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
+vim.keymap.set('x', '<M-k>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
 vim.keymap.set('x', '<', '<gv', { desc = 'Indent left (keep selection)' })
 vim.keymap.set('x', '>', '>gv', { desc = 'Indent right (keep selection)' })
 

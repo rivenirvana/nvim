@@ -5,40 +5,28 @@ return {
   event = 'VimEnter',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   -- dependencies = { 'echasnovski/mini.icons' },
-  opts = {},
   config = function()
     local fzflua = require 'fzf-lua'
     fzflua.setup()
     fzflua.register_ui_select()
 
-    vim.keymap.set('n', '<leader>sh', fzflua.helptags, { desc = '[S]earch [H]elp' })
-    vim.keymap.set('n', '<leader>sk', fzflua.keymaps, { desc = '[S]earch [K]eymaps' })
-    vim.keymap.set('n', '<leader>sf', fzflua.files, { desc = '[S]earch [F]iles' })
-    vim.keymap.set('n', '<leader>st', fzflua.git_files, { desc = '[S]earch [T]racked Git Files' })
-    vim.keymap.set({ 'n', 'v' }, '<leader>sb', fzflua.builtin, { desc = '[S]earch [B]uiltin Search Commands' })
-    vim.keymap.set('n', '<leader>sw', fzflua.grep_cword, { desc = '[S]earch Current [W]ord' })
-    vim.keymap.set('v', '<leader>ss', fzflua.grep_visual, { desc = '[S]earch Current [S]election' })
-    vim.keymap.set('n', '<leader>sg', fzflua.live_grep, { desc = '[S]earch Via [G]rep' })
-    vim.keymap.set('n', '<leader>sd', fzflua.diagnostics_document, { desc = '[S]earch [D]iagnostics' })
-    vim.keymap.set('n', '<leader>sr', fzflua.resume, { desc = '[S]earch [R]esume' })
-    vim.keymap.set('n', '<leader>so', fzflua.oldfiles, { desc = '[S]earch [O]pened Files' })
-    vim.keymap.set('n', '<leader>sn', function() fzflua.files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim Config' })
-    vim.keymap.set('n', '<leader>sC', fzflua.blines, { desc = '[S]earch [C]urrent Buffer' })
-    vim.keymap.set('n', '<leader>sA', fzflua.lines, { desc = '[S]earch [A]ll Buffers' })
-    vim.keymap.set('n', '<leader><leader>', fzflua.buffers, { desc = '[ ] Search Buffers' })
 
-    vim.api.nvim_create_autocmd('LspAttach', {
-      group = vim.api.nvim_create_augroup('SetLspKeymaps', {}),
-      callback = function()
-        vim.keymap.set('n', 'grr', fzflua.lsp_references, { desc = '[G]oto [R]eferences' })
-        vim.keymap.set('n', 'gri', fzflua.lsp_implementations, { desc = '[G]oto [I]mplementation' })
-        vim.keymap.set('n', 'gra', fzflua.lsp_code_actions, { desc = '[G]oto Code [A]ctions' })
-        vim.keymap.set('n', 'grd', fzflua.lsp_definitions, { desc = '[G]oto [D]efinition' })
-        vim.keymap.set('n', 'grt', fzflua.lsp_typedefs, { desc = '[G]oto [T]ype Definition' })
-        vim.keymap.set('n', 'gD', fzflua.lsp_document_symbols, { desc = 'Open [D]ocument Symbols' })
-        vim.keymap.set('n', 'gW', fzflua.lsp_document_symbols, { desc = 'Open [W]orkspace Symbols' })
-      end,
-    })
+    vim.keymap.set({ 'n', 'x' }, '<leader>sb', fzflua.builtin, { desc = 'Search: Builtin Search Commands' })
+    vim.keymap.set('n', '<leader>sr', fzflua.resume, { desc = 'Search: Resume' })
+    vim.keymap.set('n', '<leader>sh', fzflua.helptags, { desc = 'Search: Help Docs' })
+    vim.keymap.set('n', '<leader>sk', fzflua.keymaps, { desc = 'Search: Keymaps' })
+    vim.keymap.set('n', '<leader>sf', fzflua.files, { desc = 'Search: Files' })
+    vim.keymap.set('n', '<leader>sF', fzflua.oldfiles, { desc = 'Search: Recent Files' })
+    vim.keymap.set('n', '<leader>st', fzflua.git_files, { desc = 'Search: Tracked Git Files' })
+    vim.keymap.set('n', '<leader>sw', fzflua.grep_cword, { desc = 'Search: Current Word' })
+    vim.keymap.set({ 'n', 'x' }, '<leader>ss', fzflua.grep_visual, { desc = 'Search: Current Selection' })
+    vim.keymap.set('n', '<leader>sg', fzflua.live_grep, { desc = 'Search: via Grep' })
+    vim.keymap.set('n', '<leader>sd', fzflua.diagnostics_document, { desc = 'Search: Document Diagnostics' })
+    vim.keymap.set('n', '<leader>sD', fzflua.diagnostics_workspace, { desc = 'Search: Workspace Diagnostics' })
+    vim.keymap.set('n', '<leader>sn', function() fzflua.files { cwd = vim.fn.stdpath 'config' } end, { desc = 'Search: Neovim Config' })
+    vim.keymap.set('n', '<leader>sC', fzflua.blines, { desc = 'Search: Fuzz Current Buffer' })
+    vim.keymap.set('n', '<leader>sA', fzflua.lines, { desc = 'Search: Fuzz All Buffers' })
+    vim.keymap.set('n', '<leader><leader>', fzflua.buffers, { desc = 'Search: Buffers' })
   end,
 }
 

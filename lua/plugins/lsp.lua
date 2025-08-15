@@ -25,55 +25,63 @@ return {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       { 'j-hui/fidget.nvim', opts = {} },
       'saghen/blink.cmp',
+      'ibhagwan/fzf-lua',
     },
     config = function()
       vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
-        callback = function(ev)
-          local map = function(keys, func, desc, mode)
-            mode = mode or 'n'
-            vim.keymap.set(mode, keys, func, { buffer = ev.buf, desc = 'LSP: ' .. desc })
-          end
+        group = vim.api.nvim_create_augroup('OnLspAttach', { clear = true }),
+        callback = function(on_attach)
+          local fzflua = require 'fzf-lua'
 
-          map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-          map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
-          -- map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-          -- map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-          --  To jump back, press <C-t>.
-          -- map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-          map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-          -- map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
-          -- map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
-          -- map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+          vim.keymap.set('n', 'grn', vim.lsp.buf.rename, { buffer = on_attach.buf, desc = 'LSP: Rename' })
+          vim.keymap.set({ 'n', 'x' }, 'gra', fzflua.lsp_code_actions, { buffer = on_attach.buf, desc = 'LSP: Goto Code Action' })
+          vim.keymap.set('n', 'grr', fzflua.lsp_references, { buffer = on_attach.buf, desc = 'LSP: Goto References' })
+          vim.keymap.set('n', 'gri', fzflua.lsp_implementations, { buffer = on_attach.buf, desc = 'LSP: Goto Implementation' })
+          vim.keymap.set('n', 'grd', fzflua.lsp_definitions, { buffer = on_attach.buf, desc = 'LSP: Goto Definition' })
+          vim.keymap.set('n', 'grD', fzflua.lsp_declarations, { buffer = on_attach.buf, desc = 'LSP: Goto Declaration' })
+          vim.keymap.set('n', 'grt', fzflua.lsp_typedefs, { buffer = on_attach.buf, desc = 'LSP: Goto Type Definition' })
+          vim.keymap.set('n', 'gO', fzflua.lsp_document_symbols, { buffer = on_attach.buf, desc = 'LSP: Open Document Symbols' })
+          vim.keymap.set('n', 'gW', fzflua.lsp_document_symbols, { buffer = on_attach.buf, desc = 'LSP: Open Workspace Symbols' })
 
-          map('<leader>td', function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, '[T]oggle [D]iagnostics')
+          vim.keymap.set(
+            'n',
+            '<leader>td',
+            function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end,
+            { buffer = on_attach.buf, desc = 'LSP: Toggle Diagnostics' }
+          )
 
-          local client = vim.lsp.get_client_by_id(ev.data.client_id)
-          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, ev.buf) then
-            local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+          local client = vim.lsp.get_client_by_id(on_attach.data.client_id)
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, on_attach.buf) then
+            local hl_augroup = vim.api.nvim_create_augroup('LspDocumentHighlight', { clear = false })
+
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-              buffer = ev.buf,
-              group = highlight_augroup,
+              group = hl_augroup,
+              buffer = on_attach.buf,
               callback = vim.lsp.buf.document_highlight,
             })
 
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-              buffer = ev.buf,
-              group = highlight_augroup,
+              group = hl_augroup,
+              buffer = on_attach.buf,
               callback = vim.lsp.buf.clear_references,
             })
 
             vim.api.nvim_create_autocmd('LspDetach', {
-              group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-              callback = function(ev2)
+              group = vim.api.nvim_create_augroup('OnLspDetach', { clear = true }),
+              callback = function(on_detach)
                 vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = ev2.buf }
+                vim.api.nvim_clear_autocmds { group = hl_augroup, buffer = on_detach.buf }
               end,
             })
           end
 
-          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, ev.buf) then
-            map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = ev.buf }) end, '[T]oggle Inlay [H]ints')
+          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, on_attach.buf) then
+            vim.keymap.set(
+              'n',
+              '<leader>th',
+              function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = on_attach.buf }) end,
+              { buffer = on_attach.buf, desc = 'LSP: Toggle Inlay Hints' }
+            )
           end
         end,
       })
