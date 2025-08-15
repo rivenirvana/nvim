@@ -42,7 +42,7 @@ return {
     -- lint.linters_by_ft['text'] = nil
 
     vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
-      group = vim.api.nvim_create_augroup('lint', { clear = true }),
+      group = vim.api.nvim_create_augroup('TryLint', { clear = true }),
       callback = function()
         if vim.bo.modifiable then
           lint.try_lint()
