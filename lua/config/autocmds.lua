@@ -46,15 +46,15 @@ local function send_color_code(args)
     if args.group == color.group and color.hl ~= '' then
       local hl = vim.api.nvim_get_hl(0, { name = color.hl })
       if hl and hl.bg then
-        local blend
+        local rgb_int = hl.bg
         if args.group == kitty_op.SYNC_BACKDROP then
-          blend = rgb_blend(ratio, hl.bg, 0)
+          rgb_int = rgb_blend(ratio, hl.bg, 0)
         end
 
         table.insert(code, ';')
         table.insert(code, color.key)
         table.insert(code, '=')
-        table.insert(code, string.format('#%06x', blend or hl.bg))
+        table.insert(code, string.format('#%06x', rgb_int))
       end
     elseif args.group == kitty_op.RESTORE then
       table.insert(code, ';')
