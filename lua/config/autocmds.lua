@@ -1,14 +1,18 @@
-local kitty_augroup = vim.api.nvim_create_augroup('KittyColorSync', { clear = true })
+local kitty_op = {
+  SYNC_NORMAL = vim.api.nvim_create_augroup('KittyColorSyncNormal', { clear = true }),
+  SYNC_BACKDROP = vim.api.nvim_create_augroup('KittyColorSyncBackdrop', { clear = true }),
+  RESTORE = vim.api.nvim_create_augroup('KittyColorRestore', { clear = true }),
+}
 
 local kitty_colors = {
-  { key = 'background', blend = false, hl = 'Normal' },
-  { key = 'transparent_background_color1', blend = false, hl = 'ColorColumn' },
-  { key = 'transparent_background_color2', blend = false, hl = 'CursorLine' },
-  { key = 'transparent_background_color3', blend = false, hl = 'StatusLine' },
-  { key = 'transparent_background_color4', blend = false, hl = 'NormalFloat' },
-  { key = 'transparent_background_color5', blend = true, hl = 'Normal' },
-  { key = 'transparent_background_color6', blend = true, hl = 'NormalNC' },
-  { key = 'transparent_background_color7', blend = true, hl = 'CursorLine' },
+  { key = 'background', group = kitty_op.SYNC_NORMAL, hl = 'Normal' },
+  { key = 'transparent_background_color1', group = kitty_op.SYNC_NORMAL, hl = 'ColorColumn' },
+  { key = 'transparent_background_color2', group = kitty_op.SYNC_NORMAL, hl = 'CursorLine' },
+  { key = 'transparent_background_color3', group = kitty_op.SYNC_NORMAL, hl = 'StatusLine' },
+  { key = 'transparent_background_color4', group = kitty_op.SYNC_NORMAL, hl = 'NormalFloat' },
+  { key = 'transparent_background_color5', group = kitty_op.SYNC_BACKDROP, hl = 'Normal' },
+  { key = 'transparent_background_color6', group = kitty_op.SYNC_BACKDROP, hl = 'NormalNC' },
+  { key = 'transparent_background_color7', group = kitty_op.SYNC_BACKDROP, hl = 'CursorLine' },
 }
 
 local function rgb_blend(ratio, under, over)
@@ -29,69 +33,56 @@ local function rgb_blend(ratio, under, over)
   return bit.lshift(mr, 16) + bit.lshift(mg, 8) + mb
 end
 
-vim.api.nvim_create_autocmd({ 'UIEnter', 'BufWinEnter', 'ColorScheme', 'FileType', 'WinEnter' }, {
-  group = kitty_augroup,
-  callback = function()
-    local code = { '\x1b]21' }
+local function send_color_code(args)
+  local code = { '\x1b]21' }
 
-    for _, color in ipairs(kitty_colors) do
-      if not color.blend and color.hl ~= '' then
-        local hl = vim.api.nvim_get_hl(0, { name = color.hl })
-        if hl and hl.bg then
-          table.insert(code, ';')
-          table.insert(code, color.key)
-          table.insert(code, '=')
-          table.insert(code, string.format('#%06x', hl.bg))
+  local ratio = 0
+  if args.group == kitty_op.SYNC_BACKDROP then
+    local bufnr = vim.fn.win_findbuf(args.buf)[1]
+    ratio = vim.wo[bufnr].winblend
+  end
+
+  for _, color in ipairs(kitty_colors) do
+    if args.group == color.group and color.hl ~= '' then
+      local hl = vim.api.nvim_get_hl(0, { name = color.hl })
+      if hl and hl.bg then
+        local blend
+        if args.group == kitty_op.SYNC_BACKDROP then
+          blend = rgb_blend(ratio, hl.bg, 0)
         end
-      end
-    end
 
-    table.insert(code, '\x1b\\')
-    io.stdout:write(table.concat(code))
-  end,
-})
-
-vim.api.nvim_create_autocmd({ 'FileType' }, {
-  group = kitty_augroup,
-  pattern = { '*_backdrop' },
-  callback = function(args)
-    local id = vim.fn.win_findbuf(args.buf)[1]
-    local ratio = vim.wo[id].winblend
-    local code = { '\x1b]21' }
-
-    for _, color in ipairs(kitty_colors) do
-      if color.blend and color.hl ~= '' then
-        local hl = vim.api.nvim_get_hl(0, { name = color.hl })
-        if hl and hl.bg then
-          local blend = rgb_blend(ratio, hl.bg, 0)
-          table.insert(code, ';')
-          table.insert(code, color.key)
-          table.insert(code, '=')
-          table.insert(code, string.format('#%06x', blend))
-        end
-      end
-    end
-
-    table.insert(code, '\x1b\\')
-    io.stdout:write(table.concat(code))
-  end,
-})
-
-vim.api.nvim_create_autocmd({ 'UILeave' }, {
-  group = kitty_augroup,
-  callback = function()
-    local code = { '\x1b]21' }
-
-    for _, color in ipairs(kitty_colors) do
-      if color.hl ~= '' then
         table.insert(code, ';')
         table.insert(code, color.key)
+        table.insert(code, '=')
+        table.insert(code, string.format('#%06x', blend or hl.bg))
       end
+    elseif args.group == kitty_op.RESTORE then
+      table.insert(code, ';')
+      table.insert(code, color.key)
     end
+  end
 
-    table.insert(code, '\x1b\\')
-    io.stdout:write(table.concat(code))
-  end,
+  table.insert(code, '\x1b\\')
+  io.stdout:write(table.concat(code))
+end
+
+vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
+  group = kitty_op.SYNC_NORMAL,
+  desc = 'Set specified highlight groups as transparent',
+  callback = send_color_code,
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  group = kitty_op.SYNC_BACKDROP,
+  pattern = { '*_backdrop' },
+  desc = 'Set float window backdrops as transparent',
+  callback = send_color_code,
+})
+
+vim.api.nvim_create_autocmd('UILeave', {
+  group = kitty_op.RESTORE,
+  desc = 'Restore default kitty terminal colors',
+  callback = send_color_code,
 })
 
 vim.api.nvim_create_autocmd('TextYankPost', {
