@@ -26,15 +26,15 @@ return {
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
-      -- python = { 'ruff' },
+      python = { 'ruff' },
       javascript = { 'prettierd', 'prettier', stop_after_first = true },
     },
     formatters = {
-      -- ruff = {
-      --   command = 'ruff',
-      --   args = { 'format', '-' },
-      --   stdin = true,
-      -- },
+      ruff = {
+        command = 'ruff',
+        args = { 'format', '-' },
+        stdin = true,
+      },
     },
   },
 }

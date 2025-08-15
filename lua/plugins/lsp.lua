@@ -112,7 +112,7 @@ return {
           clangd = {},
           gopls = {},
           basedpyright = {},
-          -- ruff = {},
+          ruff = {},
           rust_analyzer = {},
           -- https://github.com/pmizio/typescript-tools.nvim
           ts_ls = {},
