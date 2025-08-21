@@ -17,6 +17,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
   require 'plugins.treesitter',
+  require 'plugins.noice',
   require 'plugins.guess-indent',
   require 'plugins.gitsigns',
   require 'plugins.which-key',
