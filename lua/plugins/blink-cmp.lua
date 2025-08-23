@@ -61,6 +61,13 @@ return {
     snippets = { preset = 'luasnip' },
     fuzzy = { implementation = 'prefer_rust_with_warning' },
     signature = { enabled = true },
+
+    cmdline = {
+      completion = {
+        -- menu = { auto_show = true },
+        list = { selection = { preselect = false } },
+      },
+    },
   },
 }
 
