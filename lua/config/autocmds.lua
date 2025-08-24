@@ -1,3 +1,13 @@
+vim.api.nvim_create_autocmd('TextYankPost', {
+  group = vim.api.nvim_create_augroup('HighlightOnYank', { clear = true }),
+  desc = 'Highlight when yanking text',
+  callback = function() vim.hl.on_yank() end,
+})
+
+if not vim.g.kitty_full_transparency then
+  return
+end
+
 local kitty_op = {
   SYNC_NORMAL = vim.api.nvim_create_augroup('KittyColorSyncNormal', { clear = true }),
   SYNC_BACKDROP = vim.api.nvim_create_augroup('KittyColorSyncBackdrop', { clear = true }),
@@ -83,12 +93,6 @@ vim.api.nvim_create_autocmd('UILeave', {
   group = kitty_op.RESTORE,
   desc = 'Restore default kitty terminal colors',
   callback = send_color_code,
-})
-
-vim.api.nvim_create_autocmd('TextYankPost', {
-  group = vim.api.nvim_create_augroup('HighlightOnYank', { clear = true }),
-  desc = 'Highlight when yanking text',
-  callback = function() vim.hl.on_yank() end,
 })
 
 -- vim: ts=2 sts=2 sw=2 et
