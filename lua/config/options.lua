@@ -39,6 +39,9 @@ vim.o.breakindent = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
+-- Completion
+vim.o.completeopt = 'menuone,popup'
+
 vim.opt.isfname:append { '@-@' }
 
 -- vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
