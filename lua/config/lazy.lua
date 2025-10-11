@@ -16,6 +16,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
+  require 'plugins.tokyonight',
   require 'plugins.treesitter',
   require 'plugins.noice',
   require 'plugins.lualine',
@@ -26,7 +27,6 @@ require('lazy').setup({
   require 'plugins.lsp',
   require 'plugins.conform',
   require 'plugins.blink-cmp',
-  require 'plugins.tokyonight',
   require 'plugins.todo-comments',
   require 'plugins.mini',
   require 'plugins.debug',

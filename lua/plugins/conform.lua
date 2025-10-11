@@ -12,9 +12,12 @@ return {
   opts = {
     notify_on_error = false,
     format_on_save = function(bufnr)
-      -- Disable "format_on_save lsp_fallback" for languages that don't have a well-standardized coding style.
-      -- Can add additional languages here or re-enable it for disabled ones.
-      local disable_filetypes = { c = true, cpp = true }
+      local disable_filetypes = {
+        c = true,
+        cpp = true,
+        python = false,
+      }
+
       if disable_filetypes[vim.bo[bufnr].filetype] then
         return nil
       else
@@ -26,15 +29,15 @@ return {
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
-      python = { 'ruff' },
+      -- python = { 'ruff' },
       javascript = { 'prettierd', 'prettier', stop_after_first = true },
     },
     formatters = {
-      ruff = {
-        command = 'ruff',
-        args = { 'format', '-' },
-        stdin = true,
-      },
+      -- ruff = {
+      --   command = 'ruff',
+      --   args = { 'format', '-' },
+      --   stdin = true,
+      -- },
     },
   },
 }

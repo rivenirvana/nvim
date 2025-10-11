@@ -1,17 +1,17 @@
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('HighlightOnYank', { clear = true }),
-  desc = 'Highlight when yanking text',
+  desc = 'Highlight yanked text',
   callback = function() vim.hl.on_yank() end,
 })
 
-if not vim.g.kitty_full_transparency then
+if not vim.g.kitty_theme_tint then
   return
 end
 
 local kitty_op = {
+  RESTORE = vim.api.nvim_create_augroup('KittyColorRestore', { clear = true }),
   SYNC_NORMAL = vim.api.nvim_create_augroup('KittyColorSyncNormal', { clear = true }),
   SYNC_BACKDROP = vim.api.nvim_create_augroup('KittyColorSyncBackdrop', { clear = true }),
-  RESTORE = vim.api.nvim_create_augroup('KittyColorRestore', { clear = true }),
 }
 
 local kitty_colors = {
@@ -53,30 +53,35 @@ local function send_color_code(args)
   end
 
   for _, color in ipairs(kitty_colors) do
-    if args.group == color.group and color.hl ~= '' then
-      local hl = vim.api.nvim_get_hl(0, { name = color.hl })
-      if hl and hl.bg then
-        local rgb_int = hl.bg
-        if args.group == kitty_op.SYNC_BACKDROP then
-          rgb_int = rgb_blend(ratio, hl.bg, 0)
-        end
+    if args.group == color.group and color.hl ~= '' or args.group == kitty_op.RESTORE then
+      code[#code + 1] = ';'
+      code[#code + 1] = color.key
 
-        table.insert(code, ';')
-        table.insert(code, color.key)
-        table.insert(code, '=')
-        table.insert(code, string.format('#%06x', rgb_int))
+      if args.group ~= kitty_op.RESTORE then
+        local hl = vim.api.nvim_get_hl(0, { name = color.hl })
+        local rgb_int = args.group == kitty_op.SYNC_BACKDROP and rgb_blend(ratio, hl.bg, 0) or hl.bg
+
+        code[#code + 1] = '='
+        code[#code + 1] = string.format('#%06x', rgb_int)
       end
-    elseif args.group == kitty_op.RESTORE then
-      table.insert(code, ';')
-      table.insert(code, color.key)
     end
   end
 
-  table.insert(code, '\x1b\\')
-  io.stdout:write(table.concat(code))
+  -- code[#code + 1] = '\x1b\x5c'
+  code[#code + 1] = '\x07'
+  io.stderr:flush()
+  io.stderr:write(table.concat(code))
+  io.stderr:flush()
+  -- vim.fn.chansend(vim.v.stderr, table.concat(code))
 end
 
-vim.api.nvim_create_autocmd({ 'UIEnter', 'ColorScheme' }, {
+vim.api.nvim_create_autocmd({ 'VimLeavePre', 'VimSuspend' }, {
+  group = kitty_op.RESTORE,
+  desc = 'Restore default kitty colors',
+  callback = send_color_code,
+})
+
+vim.api.nvim_create_autocmd({ 'VimEnter', 'VimResume', 'ColorScheme' }, {
   group = kitty_op.SYNC_NORMAL,
   desc = 'Set specified highlight groups as transparent',
   callback = send_color_code,
@@ -86,12 +91,6 @@ vim.api.nvim_create_autocmd('FileType', {
   group = kitty_op.SYNC_BACKDROP,
   pattern = { '*_backdrop' },
   desc = 'Set float window backdrops as transparent',
-  callback = send_color_code,
-})
-
-vim.api.nvim_create_autocmd('UILeave', {
-  group = kitty_op.RESTORE,
-  desc = 'Restore default kitty terminal colors',
   callback = send_color_code,
 })
 

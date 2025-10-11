@@ -4,7 +4,7 @@ return {
   'ibhagwan/fzf-lua',
   event = 'VimEnter',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
-  -- dependencies = { 'echasnovski/mini.icons' },
+  -- dependencies = { 'nvim-mini/mini.icons' },
   config = function()
     local fzflua = require 'fzf-lua'
 

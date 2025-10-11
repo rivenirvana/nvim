@@ -2,23 +2,36 @@
 ---@type LazySpec
 return {
   'nvim-treesitter/nvim-treesitter',
+  lazy = false,
   build = ':TSUpdate',
-  main = 'nvim-treesitter.configs',
-  ---@module 'nvim-treesitter'
-  ---@type TSConfig
-  ---@diagnostic disable-next-line: missing-fields
-  opts = {
-    ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-    auto_install = true,
-    highlight = {
-      enable = true,
-      additional_vim_regex_highlighting = { 'ruby' },
-    },
-    indent = { enable = true, disable = { 'ruby' } },
-  },
-  -- Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-  -- Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-  -- Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  branch = 'main',
+  config = function()
+    local parsers = {
+      'bash',
+      'c',
+      'diff',
+      'html',
+      'lua',
+      'luadoc',
+      'markdown',
+      'markdown_inline',
+      'query',
+      'vim',
+      'vimdoc',
+    }
+    require('nvim-treesitter').install(parsers)
+
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = parsers,
+      callback = function()
+        vim.treesitter.start()
+        vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+      end,
+    })
+  end,
+  -- Show current context: https://github.com/nvim-treesitter/nvim-treesitter-context
+  -- Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects/tree/main
 }
 
 -- vim: ts=2 sts=2 sw=2 et

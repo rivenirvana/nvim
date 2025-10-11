@@ -5,13 +5,14 @@ return {
   event = 'VimEnter',
   version = '1.*',
   dependencies = {
+    'folke/lazydev.nvim',
+    -- 'folke/noice.nvim',
     {
       'L3MON4D3/LuaSnip',
       version = '2.*',
       build = (function()
         -- Needed for regex support in snippets
         -- Not supported in many Windows environments
-        -- Remove condition below to re-enable on Windows
         if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
           return
         end
@@ -25,7 +26,6 @@ return {
       },
       opts = {},
     },
-    'folke/lazydev.nvim',
   },
   ---@module 'blink.cmp'
   ---@type blink.cmp.Config
@@ -42,29 +42,33 @@ return {
       -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
       --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
     },
-
     appearance = {
       nerd_font_variant = 'mono',
     },
-
     completion = {
-      documentation = { auto_show = false, auto_show_delay_ms = 500 },
-    },
-
-    sources = {
-      default = { 'lsp', 'path', 'snippets', 'lazydev' },
-      providers = {
-        lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+      documentation = {
+        auto_show = false,
+        auto_show_delay_ms = 500,
       },
     },
-
+    sources = {
+      default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev' },
+      providers = {
+        lazydev = {
+          module = 'lazydev.integrations.blink',
+          score_offset = 100,
+        },
+        -- On WSL2, blink.cmp may cause the editor to freeze due to a known limitation
+        cmdline = {
+          enabled = function() return vim.fn.has 'wsl' == 0 or vim.fn.getcmdtype() ~= ':' or not vim.fn.getcmdline():match "^[%%0-9,'<>%-]*!" end,
+        },
+      },
+    },
     snippets = { preset = 'luasnip' },
     fuzzy = { implementation = 'prefer_rust_with_warning' },
     signature = { enabled = true },
-
     cmdline = {
       completion = {
-        -- menu = { auto_show = true },
         list = { selection = { preselect = false } },
       },
     },

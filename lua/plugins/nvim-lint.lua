@@ -6,6 +6,8 @@ return {
   config = function()
     local lint = require 'lint'
     lint.linters_by_ft = {
+      lua = { 'selene' },
+      python = { 'mypy' },
       -- markdown = { 'markdownlint' },
     }
 

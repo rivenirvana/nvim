@@ -21,9 +21,12 @@ return {
         ---@type MasonSettings
         opts = {},
       },
+      {
+        'j-hui/fidget.nvim',
+        opts = {},
+      },
       'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      { 'j-hui/fidget.nvim', opts = {} },
       'saghen/blink.cmp',
       'ibhagwan/fzf-lua',
     },
@@ -51,7 +54,7 @@ return {
           )
 
           local client = vim.lsp.get_client_by_id(on_attach.data.client_id)
-          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, on_attach.buf) then
+          if client and client:supports_method('textDocument/documentHighlight', on_attach.buf) then
             local hl_augroup = vim.api.nvim_create_augroup('LspDocumentHighlight', { clear = false })
 
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -75,7 +78,7 @@ return {
             })
           end
 
-          if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint, on_attach.buf) then
+          if client and client:supports_method('textDocument/inlayHint', on_attach.buf) then
             vim.keymap.set(
               'n',
               '<leader>th',
@@ -104,61 +107,52 @@ return {
         -- virtual_lines = true,
       }
 
-      ---@class LspServersConfig
-      ---@field mason table<string, vim.lsp.Config>
-      ---@field others table<string, vim.lsp.Config>
-      local servers = {
-        mason = {
-          clangd = {},
-          gopls = {},
-          basedpyright = {},
-          ruff = {},
-          rust_analyzer = {},
-          -- https://github.com/pmizio/typescript-tools.nvim
-          ts_ls = {},
-          lua_ls = {
-            -- cmd = {},
-            -- filetypes = {},
-            -- capabilities = {},
-            settings = {
-              Lua = {
-                completion = {
-                  callSnippet = 'Replace',
-                },
-                -- diagnostics = { disable = { 'missing-fields' } },
+      local configs = {
+        clangd = {},
+        gopls = {},
+        pylsp = {},
+        basedpyright = {},
+        -- ruff = {},
+        rust_analyzer = {},
+        -- https://github.com/pmizio/typescript-tools.nvim
+        ts_ls = {},
+        lua_ls = {
+          -- cmd = {},
+          -- filetypes = {},
+          -- capabilities = {},
+          settings = {
+            Lua = {
+              completion = {
+                callSnippet = 'Replace',
               },
+              -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
-          bashls = {
-            filetypes = { 'bash', 'sh', 'zsh' },
-          },
         },
-        others = {},
+        bashls = {
+          filetypes = { 'bash', 'sh', 'zsh' },
+        },
       }
 
-      local ensure_installed = vim.tbl_keys(servers.mason)
-      vim.list_extend(ensure_installed, {
+      local servers = vim.tbl_keys(configs)
+      local ensure_installed = {
         'stylua',
-        'ruff',
         'prettierd',
         'prettier',
-      })
+        'selene',
+        'mypy',
+      }
+
+      vim.list_extend(ensure_installed, servers)
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      for server, config in pairs(vim.tbl_extend('keep', servers.mason, servers.others)) do
+      for server, config in pairs(configs) do
         if not vim.tbl_isempty(config) then
           vim.lsp.config(server, config)
         end
       end
 
-      require('mason-lspconfig').setup {
-        ensure_installed = {},
-        automatic_enable = true,
-      }
-
-      if not vim.tbl_isempty(servers.others) then
-        vim.lsp.enable(vim.tbl_keys(servers.others))
-      end
+      vim.lsp.enable(servers)
     end,
   },
 }

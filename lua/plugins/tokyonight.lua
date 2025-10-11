@@ -2,6 +2,7 @@
 ---@type LazySpec
 return {
   'folke/tokyonight.nvim',
+  lazy = false,
   priority = 1000, -- Load before all other plugins
   ---@diagnostic disable-next-line: missing-fields
   config = function()

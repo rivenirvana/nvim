@@ -2,7 +2,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
 vim.g.has_nerd_font = true
-vim.g.kitty_full_transparency = false
+vim.g.kitty_theme_tint = true
 
 -- General
 vim.o.number = true
@@ -27,6 +27,12 @@ vim.o.colorcolumn = '80'
 vim.o.showmode = false
 vim.o.undofile = true
 
+-- Folding
+vim.o.foldcolumn = 'auto'
+vim.o.foldmethod = 'expr'
+-- vim.o.foldlevelstart = 99
+vim.o.foldlevel = 99
+
 -- Indent
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
@@ -40,7 +46,7 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 
 -- Completion
-vim.o.completeopt = 'menuone,popup'
+vim.o.completeopt = 'menuone,noselect,popup'
 
 vim.opt.isfname:append { '@-@' }
 

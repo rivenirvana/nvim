@@ -43,9 +43,10 @@ return {
 
     spec = {
       { '<leader>s', group = 'Search', mode = { 'n', 'v' } },
+      { '<leader>h', group = 'Git Hunk', mode = { 'n', 'v' } },
+      { '<leader>N', group = 'Noice', mode = { 'n', 'v' } },
       { '<leader>t', group = 'Toggle' },
       { '<leader>x', group = 'Exec' },
-      { '<leader>h', group = 'Git Hunk', mode = { 'n', 'v' } },
       { 'gr', group = 'LSP', mode = { 'n' } },
     },
 

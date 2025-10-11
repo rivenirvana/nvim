@@ -14,10 +14,10 @@ vim.keymap.set('n', '<leader>xr', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left>
 -- https://github.com/nvim-lua/kickstart.nvim/issues/1121
 -- vim.keymap.set('i', '<C-c>', '<C-c>')
 
-vim.keymap.set('n', '<M-j>', ':m .+1<CR>==', { desc = 'Move line down' })
-vim.keymap.set('n', '<M-k>', ':m .-2<CR>==', { desc = 'Move line up' })
-vim.keymap.set('x', '<M-j>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
-vim.keymap.set('x', '<M-k>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
+vim.keymap.set('n', '<M-j>', ':m .+1<CR>==', { desc = 'Move line down', silent = true })
+vim.keymap.set('n', '<M-k>', ':m .-2<CR>==', { desc = 'Move line up', silent = true })
+vim.keymap.set('x', '<M-j>', ":m '>+1<CR>gv=gv", { desc = 'Move selection down', silent = true })
+vim.keymap.set('x', '<M-k>', ":m '<-2<CR>gv=gv", { desc = 'Move selection up', silent = true })
 vim.keymap.set('x', '<', '<gv', { desc = 'Indent left (keep selection)' })
 vim.keymap.set('x', '>', '>gv', { desc = 'Indent right (keep selection)' })
 
