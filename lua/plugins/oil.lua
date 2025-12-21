@@ -6,21 +6,20 @@ return {
   dependencies = {
     { 'nvim-tree/nvim-web-devicons', opts = {} }, -- 'nvim-mini/mini.icons',
   },
-  -- ---@module 'oil'
-  -- ---@type oil.SetupOpts
-  -- opts = {},
-  config = function()
+  ---@module 'oil'
+  ---@type oil.SetupOpts
+  opts = {
+    keymaps = {
+      ['<Esc>'] = { 'actions.close', mode = 'n' },
+      ['q'] = { 'actions.close', mode = 'n' },
+    },
+    view_options = {
+      show_hidden = true,
+    },
+  },
+  config = function(_, opts)
     local oil = require 'oil'
-    oil.setup {
-      keymaps = {
-        ['<Esc>'] = { 'actions.close', mode = 'n' },
-        ['q'] = { 'actions.close', mode = 'n' },
-      },
-      view_options = {
-        show_hidden = true,
-      },
-    }
-
+    oil.setup(opts)
     vim.keymap.set('n', '-', oil.open_float, { desc = 'Oil: Open Parent Directory' })
   end,
 }

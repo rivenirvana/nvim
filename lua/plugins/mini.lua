@@ -2,6 +2,7 @@
 ---@type LazySpec
 return {
   'nvim-mini/mini.nvim',
+  event = { 'BufReadPost', 'BufNewFile' },
   config = function()
     -- Better Around/Inside textobjects
     --  - va)  - [V]isually select [A]round [)]paren
@@ -15,13 +16,13 @@ return {
     -- - sr)'  - [S]urround [R]eplace [)] [']
     require('mini.surround').setup()
 
-    -- Simple and easy statusline.
-    local statusline = require 'mini.statusline'
-    statusline.setup { use_icons = vim.g.has_nerd_font }
-
-    -- Set the section for cursor location to LINE:COLUMN
-    ---@diagnostic disable-next-line: duplicate-set-field
-    statusline.section_location = function() return '%2l:%-2v' end
+    -- -- Simple and easy statusline.
+    -- local statusline = require 'mini.statusline'
+    -- statusline.setup { use_icons = vim.g.has_nerd_font }
+    --
+    -- -- Set the section for cursor location to LINE:COLUMN
+    -- ---@diagnostic disable-next-line: duplicate-set-field
+    -- statusline.section_location = function() return '%2l:%-2v' end
   end,
 }
 

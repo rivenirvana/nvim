@@ -2,7 +2,7 @@
 ---@type LazySpec
 return {
   'andymass/vim-matchup',
-  event = 'VimEnter',
+  lazy = false,
   ---@type matchup.Config
   opts = {
     matchparen = {

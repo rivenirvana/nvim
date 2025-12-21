@@ -14,22 +14,6 @@ return {
   },
   {
     'neovim/nvim-lspconfig',
-    dependencies = {
-      {
-        'mason-org/mason.nvim',
-        ---@module 'mason.settings'
-        ---@type MasonSettings
-        opts = {},
-      },
-      {
-        'j-hui/fidget.nvim',
-        opts = {},
-      },
-      'mason-org/mason-lspconfig.nvim',
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
-      'saghen/blink.cmp',
-      'ibhagwan/fzf-lua',
-    },
     config = function()
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('OnLspAttach', { clear = true }),
@@ -106,53 +90,95 @@ return {
         },
         -- virtual_lines = true,
       }
-
-      local configs = {
-        clangd = {},
-        gopls = {},
-        pylsp = {},
-        basedpyright = {},
-        -- ruff = {},
-        rust_analyzer = {},
+    end,
+  },
+  {
+    'mason-org/mason-lspconfig.nvim',
+    dependencies = {
+      {
+        'mason-org/mason.nvim',
+        ---@module 'mason.settings'
+        ---@type MasonSettings
+        opts = {},
+      },
+      'neovim/nvim-lspconfig',
+    },
+    config = function()
+      local servers = {
+        clangd = {
+          enabled = true,
+          spec = {},
+        },
+        gopls = {
+          enabled = true,
+          spec = {},
+        },
+        pylsp = {
+          enabled = false,
+          spec = {},
+        },
+        basedpyright = {
+          enabled = true,
+          spec = {},
+        },
+        ruff = {
+          enabled = false,
+          spec = {},
+        },
+        rust_analyzer = {
+          enabled = true,
+          spec = {},
+        },
         -- https://github.com/pmizio/typescript-tools.nvim
-        ts_ls = {},
+        ts_ls = {
+          enabled = true,
+          spec = {},
+        },
         lua_ls = {
-          -- cmd = {},
-          -- filetypes = {},
-          -- capabilities = {},
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = 'Replace',
+          enabled = true,
+          spec = {
+            -- cmd = {},
+            -- filetypes = {},
+            -- capabilities = {},
+            settings = {
+              Lua = {
+                completion = {
+                  callSnippet = 'Replace',
+                },
+                -- diagnostics = { disable = { 'missing-fields' } },
               },
-              -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
         bashls = {
-          filetypes = { 'bash', 'sh', 'zsh' },
+          enabled = true,
+          spec = {
+            filetypes = { 'bash', 'sh', 'zsh' },
+            settings = {
+              bashIde = {
+                shfmt = {
+                  path = '',
+                },
+              },
+            },
+          },
         },
       }
 
-      local servers = vim.tbl_keys(configs)
-      local ensure_installed = {
-        'stylua',
-        'prettierd',
-        'prettier',
-        'selene',
-        'mypy',
-      }
-
-      vim.list_extend(ensure_installed, servers)
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
-      for server, config in pairs(configs) do
-        if not vim.tbl_isempty(config) then
-          vim.lsp.config(server, config)
+      local enabled = {}
+      for server, config in pairs(servers) do
+        if config.enabled then
+          enabled[server] = config.spec
+          if not vim.tbl_isempty(config.spec) then
+            vim.lsp.config(server, config.spec)
+          end
         end
       end
 
-      vim.lsp.enable(servers)
+      require('mason-lspconfig').setup {
+        ensure_installed = vim.tbl_keys(servers),
+        automatic_enable = vim.tbl_keys(enabled),
+      }
     end,
   },
 }

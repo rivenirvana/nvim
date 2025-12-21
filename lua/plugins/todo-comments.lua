@@ -2,7 +2,7 @@
 ---@type LazySpec
 return {
   'folke/todo-comments.nvim',
-  event = 'VimEnter',
+  event = { 'BufReadPost', 'BufNewFile' },
   dependencies = { 'nvim-lua/plenary.nvim' },
   ---@module 'todo-comments'
   ---@type TodoOptions

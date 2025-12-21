@@ -5,27 +5,32 @@ return {
   event = 'VimEnter',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   -- dependencies = { 'nvim-mini/mini.icons' },
-  config = function()
+  opts = {
+    winopts = {
+      -- height = 0.95,
+      -- width = 0.95,
+      -- row = 0.50,
+      fullscreen = true,
+    },
+    keymap = {
+      fzf = {
+        true,
+        ['ctrl-q'] = 'select-all+accept',
+      },
+    },
+    fzf_opts = {
+      ['--cycle'] = '',
+    },
+    -- file_icon_padding = ' ',
+    -- winopts = {
+    --   preview = {
+    --     default = 'bat',
+    --   },
+    -- },
+  },
+  config = function(_, opts)
     local fzflua = require 'fzf-lua'
-
-    fzflua.setup {
-      keymap = {
-        fzf = {
-          true,
-          ['ctrl-q'] = 'select-all+accept',
-        },
-      },
-      fzf_opts = {
-        ['--cycle'] = '',
-      },
-      -- file_icon_padding = ' ',
-      -- winopts = {
-      --   preview = {
-      --     default = 'bat',
-      --   },
-      -- },
-    }
-
+    fzflua.setup(opts)
     fzflua.register_ui_select()
 
     vim.keymap.set({ 'n', 'x' }, '<leader>sb', fzflua.builtin, { desc = 'Search: Builtin Search Commands' })

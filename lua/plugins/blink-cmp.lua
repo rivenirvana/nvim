@@ -58,14 +58,10 @@ return {
           module = 'lazydev.integrations.blink',
           score_offset = 100,
         },
-        -- On WSL2, blink.cmp may cause the editor to freeze due to a known limitation
-        cmdline = {
-          enabled = function() return vim.fn.has 'wsl' == 0 or vim.fn.getcmdtype() ~= ':' or not vim.fn.getcmdline():match "^[%%0-9,'<>%-]*!" end,
-        },
       },
     },
-    snippets = { preset = 'luasnip' },
     fuzzy = { implementation = 'prefer_rust_with_warning' },
+    snippets = { preset = 'luasnip' },
     signature = { enabled = true },
     cmdline = {
       completion = {

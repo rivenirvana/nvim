@@ -10,6 +10,12 @@ return {
     local noice = require 'noice'
     require('lualine').setup {
       sections = {
+        lualine_b = {
+          'branch',
+          'diff',
+          'lsp_status',
+          'diagnostics',
+        },
         lualine_c = {
           {
             'filename',
@@ -23,13 +29,36 @@ return {
           },
         },
         lualine_x = {
+          'selectioncount',
           'searchcount',
+          -- {
+          --   noice.api.status.search.get,
+          --   cond = noice.api.status.search.has,
+          --   color = { fg = '#ff9e64' },
+          -- },
           {
             'encoding',
             show_bomb = true,
           },
           'fileformat',
           'filetype',
+          'filesize',
+          -- {
+          --   noice.api.status.message.get_hl,
+          --   cond = noice.api.status.message.has,
+          --   color = { fg = '#ff9e64' },
+          -- },
+          -- {
+          --   noice.api.status.command.get,
+          --   cond = noice.api.status.command.has,
+          --   color = { fg = '#ff9e64' },
+          -- },
+        },
+        lualine_y = {
+          'location',
+        },
+        lualine_z = {
+          'progress',
         },
       },
     }

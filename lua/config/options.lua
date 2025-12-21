@@ -2,7 +2,6 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
 vim.g.has_nerd_font = true
-vim.g.kitty_theme_tint = true
 
 -- General
 vim.o.number = true
@@ -28,7 +27,7 @@ vim.o.showmode = false
 vim.o.undofile = true
 
 -- Folding
-vim.o.foldcolumn = 'auto'
+-- vim.o.foldcolumn = 'auto'
 vim.o.foldmethod = 'expr'
 -- vim.o.foldlevelstart = 99
 vim.o.foldlevel = 99

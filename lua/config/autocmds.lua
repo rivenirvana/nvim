@@ -1,10 +1,34 @@
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('HighlightOnYank', { clear = true }),
   desc = 'Highlight yanked text',
-  callback = function() vim.hl.on_yank() end,
+  callback = function() vim.hl.on_yank { timeout = 200 } end,
 })
 
-if not vim.g.kitty_theme_tint then
+vim.api.nvim_create_autocmd('BufReadPost', {
+  desc = 'Restore cursor position on file open',
+  group = vim.api.nvim_create_augroup('RestoreFileCursor', { clear = true }),
+  pattern = '*',
+  callback = function()
+    local line = vim.fn.line '\'"'
+    if line > 1 and line <= vim.fn.line '$' then
+      vim.cmd 'normal! g\'"'
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  desc = 'Automatically create parent dirs on file save',
+  group = vim.api.nvim_create_augroup('AutoCreateDirs', { clear = true }),
+  pattern = '*',
+  callback = function()
+    local dir = vim.fn.expand '<afile>:p:h'
+    if vim.fn.isdirectory(dir) == 0 then
+      vim.fn.mkdir(dir, 'p')
+    end
+  end,
+})
+
+if not vim.env.KITTY_WINDOW_ID then
   return
 end
 
@@ -67,12 +91,8 @@ local function send_color_code(args)
     end
   end
 
-  -- code[#code + 1] = '\x1b\x5c'
   code[#code + 1] = '\x07'
-  io.stderr:flush()
-  io.stderr:write(table.concat(code))
-  io.stderr:flush()
-  -- vim.fn.chansend(vim.v.stderr, table.concat(code))
+  vim.api.nvim_ui_send(table.concat(code))
 end
 
 vim.api.nvim_create_autocmd({ 'VimLeavePre', 'VimSuspend' }, {

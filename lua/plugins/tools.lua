@@ -1,8 +1,8 @@
 ---@module 'lazy'
 ---@type LazySpec
 return {
-  'NMAC427/guess-indent.nvim',
-  event = { 'BufReadPost', 'BufNewFile' },
+  'WhoIsSethDaniel/mason-tool-installer.nvim',
+  opts_extend = { 'ensure_installed' },
   opts = {},
 }
 
