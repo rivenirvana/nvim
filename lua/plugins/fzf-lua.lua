@@ -6,6 +6,7 @@ return {
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   -- dependencies = { 'nvim-mini/mini.icons' },
   opts = {
+    ui_select = true,
     winopts = {
       -- height = 0.95,
       -- width = 0.95,
@@ -31,7 +32,6 @@ return {
   config = function(_, opts)
     local fzflua = require 'fzf-lua'
     fzflua.setup(opts)
-    fzflua.register_ui_select()
 
     vim.keymap.set({ 'n', 'x' }, '<leader>sb', fzflua.builtin, { desc = 'Search: Builtin Search Commands' })
     vim.keymap.set('n', '<leader>sr', fzflua.resume, { desc = 'Search: Resume' })
