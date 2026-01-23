@@ -11,16 +11,17 @@ return {
     require('lualine').setup {
       sections = {
         lualine_b = {
-          'branch',
-          'diff',
-          'lsp_status',
-          'diagnostics',
+          { 'branch', separator = ' ', padding = { left = 1, right = 0 } },
+          { 'diff', padding = { left = 0, right = 1 } },
+          { 'lsp_status', separator = ' ', padding = { left = 1, right = 0 } },
+          { 'diagnostics', padding = { left = 0, right = 1 } },
         },
         lualine_c = {
+          { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
           {
             'filename',
             newfile_status = true,
-            path = 3,
+            path = 1,
           },
           {
             noice.api.status.mode.get,
@@ -36,13 +37,12 @@ return {
           --   cond = noice.api.status.search.has,
           --   color = { fg = '#ff9e64' },
           -- },
+          'filesize',
           {
             'encoding',
             show_bomb = true,
           },
           'fileformat',
-          'filetype',
-          'filesize',
           -- {
           --   noice.api.status.message.get_hl,
           --   cond = noice.api.status.message.has,
@@ -55,10 +55,11 @@ return {
           -- },
         },
         lualine_y = {
-          'location',
+          { 'progress', separator = '', padding = { left = 1, right = 0 } },
+          { 'location', padding = { left = 0, right = 1 } },
         },
         lualine_z = {
-          'progress',
+          function() return ' ' .. os.date '%R' end,
         },
       },
     }
