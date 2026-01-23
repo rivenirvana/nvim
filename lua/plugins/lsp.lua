@@ -28,7 +28,7 @@ return {
           vim.keymap.set('n', 'grD', fzflua.lsp_declarations, { buffer = on_attach.buf, desc = 'LSP: Goto Declaration' })
           vim.keymap.set('n', 'grt', fzflua.lsp_typedefs, { buffer = on_attach.buf, desc = 'LSP: Goto Type Definition' })
           vim.keymap.set('n', 'gO', fzflua.lsp_document_symbols, { buffer = on_attach.buf, desc = 'LSP: Open Document Symbols' })
-          vim.keymap.set('n', 'gW', fzflua.lsp_document_symbols, { buffer = on_attach.buf, desc = 'LSP: Open Workspace Symbols' })
+          vim.keymap.set('n', 'gW', fzflua.lsp_workspace_symbols, { buffer = on_attach.buf, desc = 'LSP: Open Workspace Symbols' })
 
           vim.keymap.set(
             'n',
