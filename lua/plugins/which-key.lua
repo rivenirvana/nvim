@@ -47,6 +47,7 @@ return {
       { '<leader>N', group = 'Noice', mode = { 'n', 'v' } },
       { '<leader>t', group = 'Toggle' },
       { '<leader>x', group = 'Exec' },
+      { '<leader>c', group = 'Conform' },
       { 'gr', group = 'LSP', mode = { 'n' } },
     },
 
