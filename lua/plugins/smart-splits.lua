@@ -6,7 +6,7 @@ return {
   build = './kitty/install-kittens.bash',
   opts = {
     default_amount = 1,
-    at_edge = 'wrap',
+    -- at_edge = 'wrap',
     float_win_behavior = 'mux',
     cursor_follows_swapped_bufs = true,
   },
