@@ -39,16 +39,15 @@ return {
       -- <c-k>: Toggle signature help
       preset = 'default',
 
-      -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
-      --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
+      -- https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
     },
     appearance = {
       nerd_font_variant = 'mono',
     },
     completion = {
       documentation = {
-        auto_show = false,
-        auto_show_delay_ms = 500,
+        auto_show = true,
+        auto_show_delay_ms = 200,
       },
     },
     sources = {
