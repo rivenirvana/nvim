@@ -14,6 +14,15 @@ return {
   },
   {
     'neovim/nvim-lspconfig',
+    dependencies = {
+      {
+        'mason-org/mason.nvim',
+        ---@module 'mason.settings'
+        ---@type MasonSettings
+        opts = {},
+      },
+      'mason-org/mason-lspconfig.nvim',
+    },
     config = function()
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('OnLspAttach', { clear = true }),
@@ -90,20 +99,7 @@ return {
         },
         -- virtual_lines = true,
       }
-    end,
-  },
-  {
-    'mason-org/mason-lspconfig.nvim',
-    dependencies = {
-      {
-        'mason-org/mason.nvim',
-        ---@module 'mason.settings'
-        ---@type MasonSettings
-        opts = {},
-      },
-      'neovim/nvim-lspconfig',
-    },
-    config = function()
+
       local servers = {
         clangd = {
           enabled = true,
@@ -163,12 +159,16 @@ return {
             },
           },
         },
+        gradle_ls = {
+          enabled = true,
+          spec = {},
+        },
       }
 
       local enabled = {}
       for server, config in pairs(servers) do
         if config.enabled then
-          enabled[server] = config.spec
+          table.insert(enabled, server)
           if not vim.tbl_isempty(config.spec) then
             vim.lsp.config(server, config.spec)
           end
@@ -177,7 +177,7 @@ return {
 
       require('mason-lspconfig').setup {
         ensure_installed = vim.tbl_keys(servers),
-        automatic_enable = vim.tbl_keys(enabled),
+        automatic_enable = enabled,
       }
     end,
   },
