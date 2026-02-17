@@ -39,13 +39,6 @@ return {
           vim.keymap.set('n', 'gO', fzflua.lsp_document_symbols, { buffer = on_attach.buf, desc = 'LSP: Open Document Symbols' })
           vim.keymap.set('n', 'gW', fzflua.lsp_workspace_symbols, { buffer = on_attach.buf, desc = 'LSP: Open Workspace Symbols' })
 
-          vim.keymap.set(
-            'n',
-            '<leader>td',
-            function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end,
-            { buffer = on_attach.buf, desc = 'LSP: Toggle Diagnostics' }
-          )
-
           local client = vim.lsp.get_client_by_id(on_attach.data.client_id)
           if client and client:supports_method('textDocument/documentHighlight', on_attach.buf) then
             local hl_augroup = vim.api.nvim_create_augroup('LspDocumentHighlight', { clear = false })
@@ -82,24 +75,6 @@ return {
         end,
       })
 
-      vim.diagnostic.config {
-        severity_sort = true,
-        float = { source = 'if_many' },
-        signs = vim.g.has_nerd_font and {
-          text = {
-            [vim.diagnostic.severity.ERROR] = '󰅚 ',
-            [vim.diagnostic.severity.WARN] = '󰀪 ',
-            [vim.diagnostic.severity.INFO] = '󰋽 ',
-            [vim.diagnostic.severity.HINT] = '󰌶 ',
-          },
-        } or {},
-        virtual_text = {
-          source = 'if_many',
-          spacing = 2,
-        },
-        -- virtual_lines = true,
-      }
-
       local servers = {
         clangd = {
           enabled = true,
@@ -132,6 +107,7 @@ return {
         },
         lua_ls = {
           enabled = true,
+          pin = '@3.16.4',
           spec = {
             -- cmd = {},
             -- filetypes = {},
@@ -163,21 +139,31 @@ return {
           enabled = true,
           spec = {},
         },
+        harper_ls = {
+          enabled = true,
+          spec = {
+            filetypes = { 'asciidoc', 'markdown', 'text', 'typst' },
+          },
+        },
       }
 
-      local enabled = {}
+      local install, enable = {}, {}
       for server, config in pairs(servers) do
-        if config.enabled then
-          table.insert(enabled, server)
-          if not vim.tbl_isempty(config.spec) then
-            vim.lsp.config(server, config.spec)
-          end
+        local is_enabled = config.enabled
+        local pin = config.pin
+        local spec = config.spec
+
+        install[#install + 1] = pin and (server .. pin) or server
+
+        if is_enabled then
+          enable[#enable + 1] = server
+          if spec and next(spec) ~= nil then vim.lsp.config(server, spec) end
         end
       end
 
       require('mason-lspconfig').setup {
-        ensure_installed = vim.tbl_keys(servers),
-        automatic_enable = enabled,
+        ensure_installed = install,
+        automatic_enable = enable,
       }
     end,
   },
