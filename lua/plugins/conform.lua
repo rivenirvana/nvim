@@ -46,9 +46,7 @@ return {
           javascript = true,
         }
 
-        if disable_filetypes[vim.bo[bufnr].filetype] or vim.g.disable_format_on_save or vim.b[bufnr].disable_format_on_save then
-          return
-        end
+        if disable_filetypes[vim.bo[bufnr].filetype] or vim.g.disable_format_on_save or vim.b[bufnr].disable_format_on_save then return end
 
         return {
           timeout_ms = 500,

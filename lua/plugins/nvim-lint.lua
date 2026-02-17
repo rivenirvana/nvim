@@ -12,6 +12,7 @@ return {
       lint.linters_by_ft = {
         lua = { 'selene' },
         python = { 'mypy' },
+        dotenv = { 'dotenv-linter' },
         -- markdown = { 'markdownlint' },
       }
 
@@ -50,9 +51,7 @@ return {
       vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
         group = vim.api.nvim_create_augroup('TryLint', { clear = true }),
         callback = function()
-          if vim.bo.modifiable then
-            lint.try_lint()
-          end
+          if vim.bo.modifiable then lint.try_lint() end
         end,
       })
     end,
@@ -63,6 +62,7 @@ return {
       ensure_installed = {
         'selene',
         'mypy',
+        'dotenv-linter',
       },
     },
   },

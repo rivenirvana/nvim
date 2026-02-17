@@ -8,9 +8,7 @@ return {
     ---@param buf integer
     ---@param lang string
     local function attach(buf, lang)
-      if not vim.treesitter.language.add(lang) then
-        return
-      end
+      if not vim.treesitter.language.add(lang) then return end
 
       vim.treesitter.start(buf, lang)
       vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
@@ -22,9 +20,7 @@ return {
       callback = function(args)
         local buf, ft = args.buf, args.match
         local lang = vim.treesitter.language.get_lang(ft)
-        if not lang then
-          return
-        end
+        if not lang then return end
 
         local installed = require('nvim-treesitter').get_installed 'parsers'
         if vim.tbl_contains(installed, lang) then
@@ -65,8 +61,8 @@ return {
     require('nvim-treesitter').install(parsers)
   end,
 
-  -- Show current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-  -- Textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  -- https://github.com/nvim-treesitter/nvim-treesitter-context
+  -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 }
 
 -- vim: ts=2 sts=2 sw=2 et
