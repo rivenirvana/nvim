@@ -3,59 +3,43 @@
 return {
   'nvim-lualine/lualine.nvim',
   dependencies = {
-    'nvim-tree/nvim-web-devicons',
+    'nvim-mini/mini.icons',
     'folke/noice.nvim',
   },
   config = function()
     local noice = require 'noice'
     require('lualine').setup {
+      options = {
+        component_separators = '',
+        section_separators = '',
+      },
       sections = {
         lualine_b = {
-          { 'branch', separator = ' ', padding = { left = 1, right = 0 } },
-          { 'diff', padding = { left = 0, right = 1 } },
-          { 'lsp_status', separator = ' ', padding = { left = 1, right = 0 } },
-          { 'diagnostics', padding = { left = 0, right = 1 } },
+          'branch',
+          'lsp_status',
         },
         lualine_c = {
-          { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
+          { 'filetype', icon_only = true, padding = { left = 1, right = 0 } },
           {
             'filename',
             newfile_status = true,
             path = 1,
+            padding = { left = 0, right = 1 },
+            fmt = function(str, _) return vim.bo.filetype ~= '' and str or ' ' .. str end,
           },
-          {
-            noice.api.status.mode.get,
-            cond = noice.api.status.mode.has,
-            color = { fg = '#ff9e64' },
-          },
+          { noice.api.status.mode.get, cond = noice.api.status.mode.has, color = { fg = '#ff9e64' } },
         },
         lualine_x = {
           'selectioncount',
           'searchcount',
-          -- {
-          --   noice.api.status.search.get,
-          --   cond = noice.api.status.search.has,
-          --   color = { fg = '#ff9e64' },
-          -- },
+          'diff',
+          'diagnostics',
           'filesize',
-          {
-            'encoding',
-            show_bomb = true,
-          },
           'fileformat',
-          -- {
-          --   noice.api.status.message.get_hl,
-          --   cond = noice.api.status.message.has,
-          --   color = { fg = '#ff9e64' },
-          -- },
-          -- {
-          --   noice.api.status.command.get,
-          --   cond = noice.api.status.command.has,
-          --   color = { fg = '#ff9e64' },
-          -- },
+          { 'encoding', show_bomb = true, padding = { left = 0, right = 1 } },
         },
         lualine_y = {
-          { 'progress', separator = '', padding = { left = 1, right = 0 } },
+          'progress',
           { 'location', padding = { left = 0, right = 1 } },
         },
         lualine_z = {
