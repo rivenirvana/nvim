@@ -3,28 +3,17 @@
 return {
   'saghen/blink.cmp',
   event = 'VimEnter',
-  version = '1.*',
   dependencies = {
     'folke/lazydev.nvim',
-    -- 'folke/noice.nvim',
     {
       'L3MON4D3/LuaSnip',
-      version = '2.*',
-      build = (function()
-        -- Needed for regex support in snippets
-        -- Not supported in many Windows environments
-        if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-          return
-        end
-        return 'make install_jsregexp'
-      end)(),
+      build = 'make install_jsregexp',
       dependencies = {
         {
           'rafamadriz/friendly-snippets',
           config = function() require('luasnip.loaders.from_vscode').lazy_load() end,
         },
       },
-      opts = {},
     },
   },
   ---@module 'blink.cmp'
@@ -38,7 +27,6 @@ return {
       -- <c-e>: Hide menu
       -- <c-k>: Toggle signature help
       preset = 'default',
-
       -- https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
     },
     appearance = {
@@ -53,13 +41,25 @@ return {
     sources = {
       default = { 'lsp', 'path', 'snippets', 'buffer', 'lazydev' },
       providers = {
-        lazydev = {
-          module = 'lazydev.integrations.blink',
-          score_offset = 100,
+        lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+        buffer = {
+          score_offset = -100,
+          enabled = function()
+            local enabled = {
+              'markdown',
+              'text',
+            }
+            return vim.tbl_contains(enabled, vim.bo.filetype)
+          end,
         },
       },
     },
-    fuzzy = { implementation = 'prefer_rust_with_warning' },
+    fuzzy = {
+      implementation = 'prefer_rust_with_warning',
+      prebuilt_binaries = {
+        force_version = 'v1.9.1',
+      },
+    },
     snippets = { preset = 'luasnip' },
     signature = { enabled = true },
     cmdline = {
