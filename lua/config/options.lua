@@ -25,6 +25,13 @@ vim.o.mouse = 'a'
 vim.o.colorcolumn = '80'
 vim.o.showmode = false
 vim.o.undofile = true
+-- vim.opt.cpoptions:append 'I'
+vim.opt.shortmess:append 'I'
+vim.cmd [[
+  aunmenu PopUp.How-to\ disable\ mouse
+  aunmenu PopUp.-1-
+  aunmenu PopUp.-2-
+]]
 
 -- Folding
 -- vim.o.foldcolumn = 'auto'
