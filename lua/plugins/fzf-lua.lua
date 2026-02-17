@@ -3,8 +3,7 @@
 return {
   'ibhagwan/fzf-lua',
   event = 'VimEnter',
-  dependencies = { 'nvim-tree/nvim-web-devicons' },
-  -- dependencies = { 'nvim-mini/mini.icons' },
+  dependencies = { 'nvim-mini/mini.icons' },
   opts = {
     ui_select = true,
     winopts = {
@@ -33,7 +32,7 @@ return {
     local fzflua = require 'fzf-lua'
     fzflua.setup(opts)
 
-    vim.keymap.set({ 'n', 'x' }, '<leader>sb', fzflua.builtin, { desc = 'Search: Builtin Search Commands' })
+    vim.keymap.set({ 'n', 'x' }, '<leader>sc', fzflua.builtin, { desc = 'Search: Builtin Search Commands' })
     vim.keymap.set('n', '<leader>sr', fzflua.resume, { desc = 'Search: Resume' })
     vim.keymap.set('n', '<leader>sh', fzflua.helptags, { desc = 'Search: Help Docs' })
     vim.keymap.set('n', '<leader>sk', fzflua.keymaps, { desc = 'Search: Keymaps' })

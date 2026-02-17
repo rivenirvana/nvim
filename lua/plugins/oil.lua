@@ -4,14 +4,27 @@ return {
   'stevearc/oil.nvim',
   lazy = false,
   dependencies = {
-    { 'nvim-tree/nvim-web-devicons', opts = {} }, -- 'nvim-mini/mini.icons',
+    { 'nvim-mini/mini.icons', opts = {} },
   },
+  init = function() vim.g.oil_detail = false end,
   ---@module 'oil'
   ---@type oil.SetupOpts
   opts = {
+    skip_confirm_for_simple_edits = true,
     keymaps = {
       ['<Esc>'] = { 'actions.close', mode = 'n' },
       ['q'] = { 'actions.close', mode = 'n' },
+      ['gd'] = {
+        desc = 'Toggle file details',
+        callback = function()
+          vim.g.oil_detail = not vim.g.oil_detail
+          if vim.g.oil_detail then
+            require('oil').set_columns { 'icon', 'permissions', 'size', 'mtime' }
+          else
+            require('oil').set_columns { 'icon' }
+          end
+        end,
+      },
     },
     view_options = {
       show_hidden = true,
