@@ -1,7 +1,7 @@
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('HighlightOnYank', { clear = true }),
   desc = 'Highlight yanked text',
-  callback = function() vim.hl.on_yank { timeout = 200 } end,
+  callback = function() vim.hl.on_yank() end,
 })
 
 vim.api.nvim_create_autocmd('BufReadPost', {
@@ -10,9 +10,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
   pattern = '*',
   callback = function()
     local line = vim.fn.line '\'"'
-    if line > 1 and line <= vim.fn.line '$' then
-      vim.cmd 'normal! g\'"'
-    end
+    if line > 1 and line <= vim.fn.line '$' then vim.cmd.normal { 'g`"', bang = true } end
   end,
 })
 
@@ -22,15 +20,11 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = '*',
   callback = function()
     local dir = vim.fn.expand '<afile>:p:h'
-    if vim.fn.isdirectory(dir) == 0 then
-      vim.fn.mkdir(dir, 'p')
-    end
+    if vim.fn.isdirectory(dir) == 0 then vim.fn.mkdir(dir, 'p') end
   end,
 })
 
-if not vim.env.KITTY_WINDOW_ID then
-  return
-end
+if not vim.env.KITTY_WINDOW_ID then return end
 
 local kitty_op = {
   RESTORE = vim.api.nvim_create_augroup('KittyColorRestore', { clear = true }),
@@ -67,23 +61,37 @@ local function rgb_blend(ratio, under, over)
   return bit.lshift(mr, 16) + bit.lshift(mg, 8) + mb
 end
 
+local hl_cache = {}
+
+local function get_hl(name)
+  local hl = hl_cache[name]
+  if not hl then
+    hl = vim.api.nvim_get_hl(0, { name = name })
+    hl_cache[name] = hl
+  end
+  return hl
+end
+
 local function send_color_code(args)
+  local group = args.group
   local code = { '\x1b]21' }
 
   local ratio = 0
-  if args.group == kitty_op.SYNC_BACKDROP then
-    local bufnr = vim.fn.win_findbuf(args.buf)[1]
-    ratio = vim.wo[bufnr].winblend
+  if group == kitty_op.SYNC_BACKDROP then
+    local winid = vim.fn.win_findbuf(args.buf)[1]
+    ratio = vim.wo[winid].winblend
   end
 
+  local op_restore = group == kitty_op.RESTORE
+
   for _, color in ipairs(kitty_colors) do
-    if args.group == color.group and color.hl ~= '' or args.group == kitty_op.RESTORE then
+    if (group == color.group and color.hl ~= '') or op_restore then
       code[#code + 1] = ';'
       code[#code + 1] = color.key
 
-      if args.group ~= kitty_op.RESTORE then
-        local hl = vim.api.nvim_get_hl(0, { name = color.hl })
-        local rgb_int = args.group == kitty_op.SYNC_BACKDROP and rgb_blend(ratio, hl.bg, 0) or hl.bg
+      if not op_restore then
+        local hl = get_hl(color.hl)
+        local rgb_int = group == kitty_op.SYNC_BACKDROP and rgb_blend(ratio, hl.bg, 0) or hl.bg
 
         code[#code + 1] = '='
         code[#code + 1] = string.format('#%06x', rgb_int)
