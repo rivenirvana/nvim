@@ -38,7 +38,7 @@ require('lazy').setup({
   require 'plugins.indent-blankline',
   require 'plugins.todo-comments',
   require 'plugins.autopairs',
-  require 'plugins.undotree',
+  -- require 'plugins.undotree',
   require 'plugins.vim-suda',
 }, {
   ui = {
@@ -59,5 +59,8 @@ require('lazy').setup({
     },
   },
 })
+
+vim.cmd.packadd 'nvim.undotree'
+vim.keymap.set('n', '<leader>u', vim.cmd.Undotree, { desc = 'Toggle Undotree' })
 
 -- vim: ts=2 sts=2 sw=2 et
