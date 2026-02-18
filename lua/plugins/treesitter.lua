@@ -5,30 +5,28 @@ return {
   lazy = false,
   build = ':TSUpdate',
   config = function()
+    local ts = require 'nvim-treesitter'
+
     ---@param buf integer
     ---@param lang string
     local function attach(buf, lang)
-      if not vim.treesitter.language.add(lang) then return end
-
       vim.treesitter.start(buf, lang)
-      vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+      vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+      vim.wo[0][0].foldmethod = 'expr'
       vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
     end
 
-    local available = require('nvim-treesitter').get_available()
+    local available = ts.get_available()
     vim.api.nvim_create_autocmd('FileType', {
       callback = function(args)
-        local buf, ft = args.buf, args.match
-        local lang = vim.treesitter.language.get_lang(ft)
+        local lang = vim.treesitter.language.get_lang(args.match)
         if not lang then return end
+        local buf = args.buf
 
-        local installed = require('nvim-treesitter').get_installed 'parsers'
-        if vim.tbl_contains(installed, lang) then
+        if vim.treesitter.language.add(lang) then
           attach(buf, lang)
         elseif vim.tbl_contains(available, lang) then
-          require('nvim-treesitter').install(lang):await(function() attach(buf, lang) end)
-        else
-          attach(buf, lang)
+          ts.install(lang):await(function() attach(buf, lang) end)
         end
       end,
     })
@@ -58,7 +56,7 @@ return {
       'xml',
       'yaml',
     }
-    require('nvim-treesitter').install(parsers)
+    ts.install(parsers)
   end,
 
   -- https://github.com/nvim-treesitter/nvim-treesitter-context
