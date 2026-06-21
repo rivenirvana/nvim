@@ -107,7 +107,6 @@ return {
         },
         lua_ls = {
           enabled = true,
-          pin = '@3.16.4',
           spec = {
             -- cmd = {},
             -- filetypes = {},
