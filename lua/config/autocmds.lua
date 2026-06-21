@@ -1,7 +1,7 @@
 vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('HighlightOnYank', { clear = true }),
   desc = 'Highlight yanked text',
-  callback = function() vim.hl.on_yank() end,
+  callback = function() vim.hl.hl_op() end,
 })
 
 vim.api.nvim_create_autocmd('BufReadPost', {
@@ -61,15 +61,13 @@ local function rgb_blend(ratio, under, over)
   return bit.lshift(mr, 16) + bit.lshift(mg, 8) + mb
 end
 
-local hl_cache = {}
+local function get_bg(name)
+  local bg = 0x000000
+  local hl = vim.api.nvim_get_hl(0, { name = name })
 
-local function get_hl(name)
-  local hl = hl_cache[name]
-  if not hl then
-    hl = vim.api.nvim_get_hl(0, { name = name })
-    hl_cache[name] = hl
-  end
-  return hl
+  if hl and hl.bg then bg = hl.bg end
+
+  return bg
 end
 
 local function send_color_code(args)
@@ -78,7 +76,7 @@ local function send_color_code(args)
 
   local ratio = 0
   if group == kitty_op.SYNC_BACKDROP then
-    local winid = vim.fn.win_findbuf(args.buf)[1]
+    local winid = vim.fn.win_findbuf(args.buf)[1] or vim.api.nvim_get_current_win()
     ratio = vim.wo[winid].winblend
   end
 
@@ -90,8 +88,8 @@ local function send_color_code(args)
       code[#code + 1] = color.key
 
       if not op_restore then
-        local hl = get_hl(color.hl)
-        local rgb_int = group == kitty_op.SYNC_BACKDROP and rgb_blend(ratio, hl.bg, 0) or hl.bg
+        local bg = get_bg(color.hl)
+        local rgb_int = group == kitty_op.SYNC_BACKDROP and rgb_blend(ratio, bg, 0) or bg
 
         code[#code + 1] = '='
         code[#code + 1] = string.format('#%06x', rgb_int)
